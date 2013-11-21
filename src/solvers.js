@@ -42,7 +42,6 @@ window.findAllNRooksSolutions = function(n) {
     // debugger;
     if (loopLength === 0) {
       boards.push(board);
-      board = makeEmptyMatrix;
     }
 
     var remainingCols = getRemainingColumns(decisionPath, size);
