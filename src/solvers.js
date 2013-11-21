@@ -13,7 +13,6 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 window.findNRooksSolution = function(n){
-  // using the constructor 
   var solution = [];
 
   var makeEmptyMatrix = function(n){
@@ -24,21 +23,42 @@ window.findNRooksSolution = function(n){
     });
   };
 
+  var board = makeEmptyMatrix(3);
+
+  var nRooksSolver = function() {
+    var colIdx = board.length;
+    
+    var determineRemainingColumns = function() {};
+    
+    var buildSolution(rowIdx, colIndices, loopLength) {
+      // termination case
+      
+      remainingCols = [];
+      for (var i = 0; i < loopLength; i++) { 
+        board[rowIdx][remainingCols[]] = 1;
+        buildSolution(rowIndices, colIndices, loopLength - 1);
+      }
+    };
+    
+    buildSolution([0], [0], loopLength);
+  }
+
+  
 
   // need a function to generate a board
-  var board = makeEmptyMatrix(n);
+  /* var board = makeEmptyMatrix(n);
 
   // I'm wondering if i could pass this thing by generating
   // diagonal rook placements for each size of board?
+  // this actually works!
   for (var i = 0; i < board.length; i++) {
     board[i][i] = 1;
   }
-
   solution = board;
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
-};
+}; */
 
 
 

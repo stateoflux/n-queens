@@ -45,8 +45,8 @@
       return (
         this.hasRowConflictAt(rowIndex) ||
         this.hasColConflictAt(colIndex) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) // ||
-        // this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
+        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex))  ||
+        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
       );
     },
 
@@ -215,7 +215,7 @@
     // 
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      var colIdx = minorDiagonalColumnIndexAtFirstRow - 1;
+      var colIdx = minorDiagonalColumnIndexAtFirstRow ;
       var matrix = this.rows();
       var minorDiagonal = [];
       var hasConflict = false;
@@ -226,24 +226,26 @@
       // need to determine boundary
       // determines starting row when column index greater than size of board
       // 
-      /* if (colIdx > size) {
-        rowIdx = ;
-      }*/
+      if (colIdx >= size) {
+        colIdx = size - 1;
+      }
 
+      // can i use the column index of first row to help me reason
+      // about the diagonal?  
       // create diagonal (fancy version)
-      /* for (var i = ; i  ; i--) {
+      for (var i = colIdx; i >= 0; i--) {
         if (rowIdx >= 0) {
-          minorDiagonal.push(matrix[row][i]);
+          minorDiagonal.push(matrix[rowIdx][i]);
         }
         rowIdx++;
-      }*/
+      }
 
       // create diagonal (naive version)
       // debugger;
-      for (var i = size - 1; i >= 0; i--) {
-        minorDiagonal.push(matrix[rowIdx][i]);
-        rowIdx++;
-      }
+      // for (var i = size - 1; i >= 0; i--) {
+      //   minorDiagonal.push(matrix[rowIdx][i]);
+      //   rowIdx++;
+      // }
 
       for (var j = 0; j < minorDiagonal.length; j++) {
         if(minorDiagonal[j] === 1) {
