@@ -13,6 +13,7 @@
 
     render: function() {
       var model = this.model;
+      debugger;
       return this.$el.html(_(_.range(model.get('n'))).map(function(rowIndex){
         return $('<tr class="row"/>').html(_(_.range(model.get('n'))).map(function(colIndex){
           var $square = $('<td class="square"/>').on('click', function(e){
