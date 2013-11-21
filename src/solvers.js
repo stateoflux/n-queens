@@ -12,8 +12,9 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-window.findNRooksSolution = function(n){
-  var solution = [];
+
+window.findAllNRooksSolutions = function(n) {
+  debugger;
 
   var makeEmptyMatrix = function(n){
     return _(_.range(n)).map(function(){
@@ -23,42 +24,66 @@ window.findNRooksSolution = function(n){
     });
   };
 
-  var board = makeEmptyMatrix(3);
+  var getRemainingColumns = function(collisonCols, size) {
+    return _.difference(_.range(size),collisonCols);
+  };
 
-  var nRooksSolver = function() {
-    var colIdx = board.length;
-    
-    var determineRemainingColumns = function() {};
-    
-    var buildSolution(rowIdx, colIndices, loopLength) {
-      // termination case
-      
-      remainingCols = [];
-      for (var i = 0; i < loopLength; i++) { 
-        board[rowIdx][remainingCols[]] = 1;
-        buildSolution(rowIndices, colIndices, loopLength - 1);
-      }
-    };
-    
-    buildSolution([0], [0], loopLength);
-  }
+  var updateDecisionPath = function(prevDecisionPath, newDecision) {
+    var newDecisionPath = prevDecisionPath.slice();
+    newDecisionPath.push(newDecision);
+    return newDecisionPath;
+  };
 
+  var board = makeEmptyMatrix(n);
+  var boards = [];
+  var size = board.length;
   
+  var buildSolution = function(rowIdx, decisionPath, loopLength) {
+    // debugger;
+    if (loopLength === 0) {
+      boards.push(board);
+      board = makeEmptyMatrix;
+    }
+
+    var remainingCols = getRemainingColumns(decisionPath, size);
+    for (var i = 0; i < loopLength; i++) {
+      board[rowIdx][remainingCols[i]] = 1;
+      // need to update the decision path before recursing
+      buildSolution(rowIdx + 1, updateDecisionPath(decisionPath, remainingCols[i]), loopLength - 1);
+    }
+    };
+  
+  buildSolution(0, [], size);
+};
+
+
+window.findNRooksSolution = function(n){
+  var solution = [];
+
+  // debugger;
+  findAllNRooksSolutions(3);
+  // var makeEmptyMatrix = function(n){
+  //   return _(_.range(n)).map(function(){
+  //     return _(_.range(n)).map(function(){
+  //       return 0;
+  //     });
+  //   });
+  // };
 
   // need a function to generate a board
-  /* var board = makeEmptyMatrix(n);
+  // var board = makeEmptyMatrix(n);
 
-  // I'm wondering if i could pass this thing by generating
-  // diagonal rook placements for each size of board?
-  // this actually works!
-  for (var i = 0; i < board.length; i++) {
-    board[i][i] = 1;
-  }
-  solution = board;
+  // // I'm wondering if i could pass this thing by generating
+  // // diagonal rook placements for each size of board?
+  // // this actually works!
+  // for (var i = 0; i < board.length; i++) {
+  //   board[i][i] = 1;
+  // }
+  // solution = board;
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
-}; */
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // return solution;
+};
 
 
 
@@ -88,3 +113,7 @@ window.countNQueensSolutions = function(n){
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+
+
+
