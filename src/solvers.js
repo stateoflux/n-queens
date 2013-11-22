@@ -95,24 +95,22 @@ window.findAllNQueens = function(n) {
   var queenCount = 0;
   debugger;
   var buildQSolution = function(rowIdx, colIdx) {
-      if (rowIdx === n - 1) {
+      if (rowIdx === n) {
         // termination case
-        // not sure what to do here.
+        return;
       }
 
-      for (var i = colIdx; i < n; i++) {
-        board.togglePiece(rowIdx, colIdx);
+      board.togglePiece(rowIdx, colIdx);
 
-        // check for conflicts.  if any, what should I do?
-        // if no conflicts then update queen counter
-        // else no update and toggle piece
+      for (var i = colIdx; i < n; i++) {        
         if (!board.hasAnyQueenConflictsOn(rowIdx, colIdx)) {
           queenCount++;
+          buildQSolution(rowIdx + 1, colIdx + 1);
         } else {
           board.togglePiece(rowIdx, colIdx);
-          queenCount && queenCount--;
+          queenCount--;
+          // return;
         }
-        buildQSolution(rowIdx + 1, colIdx + 1);
       }
     };
   buildQSolution(0, 0);
