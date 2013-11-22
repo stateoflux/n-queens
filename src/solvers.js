@@ -12,20 +12,32 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
+window.makeEmptyMatrix = function(n){
+  return _(_.range(n)).map(function(){
+    return _(_.range(n)).map(function(){
+      return 0;
+    });
+  });
+};
+
+window.buildSolutionMatrices = function(decisionPaths, n) {
+  // debugger;
+  var result = [];
+  var board = window.makeEmptyMatrix(n);
+    
+  _.each(decisionPaths, function(decisionPath, index) {
+    _.each(decisionPath, function(yCoords, index) {
+      board[index][yCoords] = 1;
+    });
+    result.push(board);
+    board = window.makeEmptyMatrix(n);
+  });
+  return result;
+};
 
 window.findAllNRooksSolutions = function(n) {
-  debugger;
-
-  var makeEmptyMatrix = function(n){
-    return _(_.range(n)).map(function(){
-      return _(_.range(n)).map(function(){
-        return 0;
-      });
-    });
-  };
-
-  var getRemainingColumns = function(collisonCols, size) {
-    return _.difference(_.range(size),collisonCols);
+  var getRemainingColumns = function(collisonCols, n) {
+    return _.difference(_.range(n),collisonCols);
   };
 
   var updateDecisionPath = function(prevDecisionPath, newDecision) {
@@ -34,63 +46,46 @@ window.findAllNRooksSolutions = function(n) {
     return newDecisionPath;
   };
 
-  var board = makeEmptyMatrix(n);
-  var boards = [];
-  var size = board.length;
+  var board = new Board({n:n});
+  var decisionPaths = [];
   
   var buildSolution = function(rowIdx, decisionPath, loopLength) {
-    // debugger;
     if (loopLength === 0) {
-      boards.push(board);
+      decisionPaths.push(decisionPath);
     }
 
-    var remainingCols = getRemainingColumns(decisionPath, size);
+    var remainingCols = getRemainingColumns(decisionPath, n);
     for (var i = 0; i < loopLength; i++) {
-      board[rowIdx][remainingCols[i]] = 1;
-      // need to update the decision path before recursing
       buildSolution(rowIdx + 1, updateDecisionPath(decisionPath, remainingCols[i]), loopLength - 1);
     }
-    };
+  };
   
-  buildSolution(0, [], size);
+  buildSolution(0, [], n);
+  return window.buildSolutionMatrices(decisionPaths, n);
 };
 
 
-window.findNRooksSolution = function(n){
-  var solution = [];
 
-  // debugger;
-  findAllNRooksSolutions(3);
-  // var makeEmptyMatrix = function(n){
-  //   return _(_.range(n)).map(function(){
-  //     return _(_.range(n)).map(function(){
-  //       return 0;
-  //     });
-  //   });
-  // };
+window.findNRooksSolution = function(n) {
+  var solution;
 
-  // need a function to generate a board
-  // var board = makeEmptyMatrix(n);
-
-  // // I'm wondering if i could pass this thing by generating
-  // // diagonal rook placements for each size of board?
-  // // this actually works!
-  // for (var i = 0; i < board.length; i++) {
-  //   board[i][i] = 1;
-  // }
-  // solution = board;
-
+  if (n === 1 ) {
+    solution = [[1]];
+  } else {
+    solution = window.findAllNRooksSolutions(n)[1];
+  }
+  
   // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  // return solution;
+  return solution;
 };
 
 
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n){
-  var solutionCount = undefined; //fixme
+  var solutionCount = null;
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
 
@@ -100,7 +95,7 @@ window.countNRooksSolutions = function(n){
 window.findNQueensSolution = function(n){
   var solution = undefined; //fixme
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
@@ -109,7 +104,7 @@ window.findNQueensSolution = function(n){
 window.countNQueensSolutions = function(n){
   var solutionCount = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
 
