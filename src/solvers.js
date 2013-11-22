@@ -100,12 +100,14 @@ window.findAllNQueens = function(n) {
         return;
       }
 
-      board.togglePiece(rowIdx, colIdx);
+      
 
       for (var i = colIdx; i < n; i++) {        
-        if (!board.hasAnyQueenConflictsOn(rowIdx, colIdx)) {
+        board.togglePiece(rowIdx, i);
+        if (!board.hasAnyQueenConflictsOn(rowIdx, i)) {
           queenCount++;
           buildQSolution(rowIdx + 1, colIdx + 1);
+          console.log("returned from stack");
         } else {
           board.togglePiece(rowIdx, colIdx);
           queenCount--;
