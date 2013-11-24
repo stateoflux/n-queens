@@ -108,8 +108,6 @@
       return hasConflicts;
     },
 
-
-
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
     // 
@@ -154,60 +152,31 @@
     // 
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
-      var colIdx = majorDiagonalColumnIndexAtFirstRow;
       // debugger;
       var matrix = this.rows();
-      var majorDiagonal = [];
-      var hasConflict = false;
       var numOfPieces = 0;
-      var row = 0;
+      var rowIdx = 0;
+      var colIdx = majorDiagonalColumnIndexAtFirstRow;
       var size = this.get('n');
 
-      // create major diagonal
-      //  
-      
-      // need to determine the boundaries of diagonal
-      // if majorDiagonalColumnIndexAtFirstRow is less than 0
-      // then the piece is at the row number equal to the negation of 
-      // the column index.
-      // 
-      // actually, what if i conceptually shift the board.  i just need
-      // to keep looping the same number of times, but maybe
-      // ignore the squares that are outside of board?
-
-      // determines starting row when column index is negative
-      if (colIdx < 0) {
-        row = 0 - colIdx;
-      }
-      for (var i = colIdx; i < size - colIdx; i++) {
-        if (colIdx >= 0 && colIdx < size) {
-          majorDiagonal.push(matrix[row][i]);
-        }
-        row++;
-      }
-
-      // search for
-      for (var j = 0; j < majorDiagonal.length; j++) {
-        if(majorDiagonal[j] === 1) {
+      for ( ; rowIdx < size && colIdx < size; rowIdx++, colIdx++) {
+        if (matrix[rowIdx][colIdx] === 1 ) {
           numOfPieces++;
         }
       }
-      if (numOfPieces === 2) {
-        hasConflict = true;
-      }
-      return hasConflict;
+      return numOfPieces === 2;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
-      var hasConflicts = false;
+      var size = this.get('n');
 
-      for (var i = 0; i < this.get('n'); i++) {
-        if (!hasConflicts) {
-          hasConflicts = this.hasMajorDiagonalConflictAt(i);
+      for (var i = 1 - size; i < size; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
         }
       }
-      return hasConflicts;
+      return false;
     },
 
     // Minor Diagonals - go from top-right to bottom-left
@@ -215,59 +184,29 @@
     // 
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      var colIdx = minorDiagonalColumnIndexAtFirstRow ;
+      var colIdx = minorDiagonalColumnIndexAtFirstRow;
       var matrix = this.rows();
-      var minorDiagonal = [];
-      var hasConflict = false;
       var numOfPieces = 0;
       var rowIdx = 0;
       var size = this.get('n');
 
-      // need to determine boundary
-      // determines starting row when column index greater than size of board
-      // 
-      if (colIdx >= size) {
-        colIdx = size - 1;
-      }
-
-      // can i use the column index of first row to help me reason
-      // about the diagonal?  
-      // create diagonal (fancy version)
-      for (var i = colIdx; i >= 0; i--) {
-        if (rowIdx >= 0) {
-          minorDiagonal.push(matrix[rowIdx][i]);
-        }
-        rowIdx++;
-      }
-
-      // create diagonal (naive version)
-      // debugger;
-      // for (var i = size - 1; i >= 0; i--) {
-      //   minorDiagonal.push(matrix[rowIdx][i]);
-      //   rowIdx++;
-      // }
-
-      for (var j = 0; j < minorDiagonal.length; j++) {
-        if(minorDiagonal[j] === 1) {
+      for ( ; rowIdx < size && colIdx >= 0; rowIdx++, colIdx--) {
+        if(matrix[rowIdx][colIdx] === 1) {
           numOfPieces++;
         }
       }
-      if (numOfPieces === 2) {
-        hasConflict = true;
-      }
-      return hasConflict;
+      return numOfPieces === 2;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function(){
-      var hasConflicts = false;
-
-      for (var i = 0; i < this.get('n'); i++) {
-        if (!hasConflicts) {
-          hasConflicts = this.hasMinorDiagonalConflictAt(i);
-        }
+      var size = this.get('n');
+      for (var i = size + 2; i > 0; i--) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        } 
       }
-      return hasConflicts;
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
